@@ -1,15 +1,17 @@
 version: '2'
 
 services:
-
-  db:
-    image: postgres
-    restart: always
-    environment:
-      POSTGRES_PASSWORD: testpasswd
-
+  backend:
+    build: .
+    ports:
+      - 8000:80
   adminer:
     image: adminer
     restart: always
     ports:
       - 8080:8080
+  db:
+    image: postgres
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: testpasswd

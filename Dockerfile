@@ -3,8 +3,7 @@ RUN apt-get update -qy
 RUN apt-get upgrade -qy
 RUN apt-get install software-properties-common -qy
 RUN add-apt-repository ppa:deadsnakes/ppa
-RUN apt-get install python3 -qy
-RUN apt-get install python3-pip -qy
+RUN apt-get install python3 python3-pip -qy
 COPY . /app
 WORKDIR /app/src
 RUN pip3 install -r ../requirements.txt
