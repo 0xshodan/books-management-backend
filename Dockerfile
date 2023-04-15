@@ -1,13 +1,11 @@
 FROM ubuntu:16.04
 RUN apt-get update -qy
 RUN apt-get upgrade -qy
-RUN apt-get install software-properties-common -qy
+RUN apt-get install software-properties-common netcat -qy
 RUN add-apt-repository ppa:deadsnakes/ppa
 RUN apt-get install python3 python3-pip -qy
-COPY . /app
-WORKDIR /app/src
-RUN pip3 install -r ../requirements.txt
-RUN python3 manage.py makemigrations
-RUN python3 manage.py migrate
+WORKDIR /usr/app
+COPY . .
+RUN pip3 install -r requirements.txt
 EXPOSE 80/tcp
-CMD [ "python3", "manage.py", "runserver", "0.0.0.0:80"]
+ENTRYPOINT [ "/usr/app/apply_migrations.sh" ]

@@ -3,15 +3,23 @@ version: '2'
 services:
   backend:
     build: .
+    command: python3 src/manage.py runserver 0.0.0.0:80
     ports:
       - 8000:80
-  adminer:
-    image: adminer
-    restart: always
-    ports:
-      - 8080:8080
+    depends_on:
+      - db
+    env_file:
+      - .env
+    stdin_open: true
+    tty: true
   db:
     image: postgres
     restart: always
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
     environment:
       POSTGRES_PASSWORD: testpasswd
+      POSTGRES_DB: books
+
+volumes:
+  postgres_data:
