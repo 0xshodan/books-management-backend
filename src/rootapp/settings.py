@@ -8,7 +8,7 @@ SECRET_KEY = config("DJANGO_SECRET")
 
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["127.0.0.1"]
 
 
 INSTALLED_APPS = (
@@ -18,6 +18,7 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'tastypie',
     'books',
     'profiles',
 )
