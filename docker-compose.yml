@@ -1,17 +1,25 @@
 version: '2'
 
 services:
+  nginx:
+    build: ./nginx
+    ports:
+      - 1337:80
+    depends_on:
+      - backend
+    volumes:
+      - staticfiles:/usr/app/static
   backend:
     build: .
-    command: python3 src/manage.py runserver 0.0.0.0:80
-    ports:
-      - 8000:80
+    command: gunicorn rootapp.wsgi:application --bind 0.0.0.0:8000
+    expose:
+      - 8000
     depends_on:
       - db
     env_file:
       - .env
-    stdin_open: true
-    tty: true
+    volumes:
+      - staticfiles:/usr/app/static
   db:
     image: postgres
     restart: always
@@ -23,3 +31,4 @@ services:
 
 volumes:
   postgres_data:
+  staticfiles:
