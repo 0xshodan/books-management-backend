@@ -1,0 +1,37 @@
+[
+    {
+        "model": "profiles.profile",
+        "pk": 1,
+        "fields": {
+            "column_name": "Название"
+          }
+    },
+    {
+        "model": "profiles.profile",
+        "pk": 2,
+        "fields": {
+            "column_name": "Заголовок"
+          }
+    },
+    {
+        "model": "profiles.profile",
+        "pk": 3,
+        "fields": {
+            "column_name": "Автор"
+          }
+    },
+    {
+        "model": "profiles.profile",
+        "pk": 4,
+        "fields": {
+            "column_name": "Описание"
+          }
+    },
+    {
+        "model": "profiles.profile",
+        "pk": 5,
+        "fields": {
+            "column_name": "Цена"
+          }
+    }
+]
