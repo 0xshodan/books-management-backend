@@ -10,6 +10,7 @@ ALLOWED_HOSTS = os.environ.get("DJANGO_ALLOWED_HOSTS").split(" ")
 
 
 INSTALLED_APPS = (
+    "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
     "django.contrib.sessions",
@@ -74,5 +75,5 @@ USE_L10N = True
 
 USE_TZ = True
 
-STATIC_URL = os.environ.get("STATIC_URL","/static/")
-STATIC_ROOT = os.environ.get("STATIC_ROOT","static")
+STATIC_URL = os.environ.get("STATIC_URL", "/static/")
+STATIC_ROOT = os.environ.get("STATIC_ROOT", "static")
