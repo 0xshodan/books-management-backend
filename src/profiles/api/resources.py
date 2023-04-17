@@ -1,11 +1,12 @@
-from tastypie.resources import ModelResource
 from tastypie.authorization import Authorization
+from tastypie.resources import ModelResource
+
 from profiles.models import Profile
 
 
-class BookResource(ModelResource):
+class ProfileResource(ModelResource):
     class Meta:
         queryset = Profile.objects.all()
-        resource_name = "profile"
+        resource_name = "profiles"
         authorization = Authorization()
-        list_allowed_methods = ['get', 'patch']
+        list_allowed_methods = ["get", "patch"]

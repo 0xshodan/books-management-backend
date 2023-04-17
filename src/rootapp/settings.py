@@ -77,3 +77,5 @@ USE_TZ = True
 
 STATIC_URL = os.environ.get("STATIC_URL", "/static/")
 STATIC_ROOT = os.environ.get("STATIC_ROOT", "static")
+
+TASTYPIE_ALLOW_MISSING_SLASH = True
