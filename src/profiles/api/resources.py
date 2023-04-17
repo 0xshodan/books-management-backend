@@ -10,3 +10,4 @@ class ProfileResource(ModelResource):
         resource_name = "profiles"
         authorization = Authorization()
         list_allowed_methods = ["get", "patch"]
+        ordering = ["id"]
