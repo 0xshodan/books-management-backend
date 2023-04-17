@@ -11,12 +11,19 @@ var ProfileView = Backbone.View.extend({
   },
   initialize: function () {
     this.template = _.template(
-      '<div><%- profile.column_name %></div><input class="switch-btn" type="checkbox" checked=<%- profile.is_visible %>></input>'
+      "<% if ( profile.column_name === '#' ) { %> <div> <%- profile.column_name %> </div> <% }" +
+        "else { %> <div><%- profile.column_name %></div>" +
+        '<input class="switch-btn" type="checkbox"></input> ' +
+        "<% }" +
+        "%>"
     );
   },
   render: function () {
     this.$el.html(this.template({ profile: this.model.attributes }));
     this.$el.attr("scope", "row");
+    if (this.model.attributes.is_visible) {
+      this.$(".switch-btn").attr("checked", true);
+    }
     return this;
   },
   switchActive: function () {
@@ -32,10 +39,8 @@ var ProfileList = Backbone.Collection.extend({
   url: "/api/v1/profiles/",
   parse: function (response) {
     resp = response.objects.map(function (profile) {
-      if (profile.is_visible) {
-        delete profile.resource_uri;
-        return profile;
-      }
+      delete profile.resource_uri;
+      return profile;
     });
     resp.unshift({
       id: 0,
@@ -65,7 +70,6 @@ var ProfileListView = Backbone.View.extend({
     this.model.fetch();
   },
   render: function () {
-    console.log(this.model.toArray());
     self = this;
     this.$el.html("");
     _.each(this.model.toArray(), function (profile) {
@@ -78,7 +82,10 @@ var ProfileListView = Backbone.View.extend({
 var Book = Backbone.Model.extend({
   id: "id",
   name: "name",
+  title: "title",
   author: "author",
+  description: "description",
+  price: "price",
 });
 
 var BookView = Backbone.View.extend({
@@ -86,7 +93,10 @@ var BookView = Backbone.View.extend({
   tagName: "tr",
   initialize: function () {
     this.template = _.template(
-      "<% _.each(book, function(value){ %><td> <%- value %> </td> <%});%>"
+      "<% _.each(book, function(value, index){ " +
+        'if (value !== null && index !== 1) {%><td><input value="<%- value %>"/></td> <%}' +
+        "else{%><td></td> <%}" +
+        "});%>"
     );
   },
   render: function () {
@@ -100,8 +110,16 @@ var BookList = Backbone.Collection.extend({
   url: "/api/v1/books/",
   parse: function (response) {
     return response.objects.map(function (book) {
+      // Это нужно для выравнивания всех параметров
       delete book.resource_uri;
-      return book;
+      let ret = {};
+      ret.id = book.id;
+      ret.name = book.name;
+      ret.title = book.title;
+      ret.author = book.author;
+      ret.description = book.description;
+      ret.price = book.price;
+      return ret;
     });
   },
 });
@@ -121,11 +139,48 @@ var BookListView = Backbone.View.extend({
       },
       this
     );
+    this.model.on(
+      "addnew",
+      function () {
+        let id =
+          this.model.models.length !== 0
+            ? this.model.models.slice(-1)[0].attributes.id + 1
+            : 1;
+        this.model.models.push(
+          new Book({
+            id: id,
+            name: "",
+            title: "",
+            author: "",
+            description: "",
+            price: 0,
+          })
+        );
+        this.render();
+      },
+      this
+    );
+    this.model.on(
+      "delete",
+      function (id) {
+        let elem = _.find(this.model.models, function (book) {
+          return book.id == id;
+        });
+        if (typeof elem === undefined) {
+          alert("Неверно указан id");
+        } else {
+          let index = this.model.models.indexOf(elem);
+          this.model.models.splice(index, 1);
+          this.render();
+        }
+      },
+      this
+    );
     this.model.on("remove", this.render, this);
+
     this.model.fetch();
   },
   render: function () {
-    console.log(this.model);
     self = this;
     this.$el.html("");
     _.each(this.model.toArray(), function (book) {
@@ -137,3 +192,11 @@ var BookListView = Backbone.View.extend({
 
 var booksView = new BookListView();
 var profilesView = new ProfileListView();
+
+function addBook() {
+  booksView.model.trigger("addnew");
+}
+function deleteBook() {
+  let id = prompt("Введите id удаляемой книги: ");
+  booksView.model.trigger("delete", id);
+}
