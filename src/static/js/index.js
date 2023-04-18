@@ -149,13 +149,14 @@ var BookListView = Backbone.View.extend({
         this.model.models.push(
           new Book({
             id: id,
-            name: "",
+            name: "Новая книга",
             title: "",
-            author: "",
+            author: "Не указан",
             description: "",
             price: 0,
           })
         );
+        this.model.models.slice(-1)[0].save();
         this.render();
       },
       this
